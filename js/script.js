@@ -5,6 +5,7 @@ const phoneList = document.querySelector("#phone-listing .row");
 
 // Return nasted object as HTML
 const loopObject = (object) => {
+  console.log(object);
   return Object.entries(object)
     .map(([key, value]) => {
       if (key === "sensors") {
@@ -20,22 +21,40 @@ const loopObject = (object) => {
     .join("");
 };
 
+// Display Error
+const renderError = (error) => {
+  phoneDetailsEl.innerHTML = "";
+  phoneList.innerHTML = "";
+
+  const div = document.createElement("div");
+  div.classList.add("alert", "alert-danger");
+  div.setAttribute("role", "alert");
+  div.innerText = error;
+  phoneDetailsEl.prepend(div);
+};
+
 // Search input & API
 const searchPhone = async (event) => {
   event.preventDefault();
   const searchText = searchInput.value;
 
-  if (!searchText) console.log("Error");
+  if (!searchText) {
+    renderError("You didn't type anything. Please enter your desired phone");
+    return;
+  }
 
   const response = await fetch(
-    `https://openapi.programming-hero.com/api/phones?search=samsung`
+    // `https://openapi.programming-hero.com/api/phones?search=samsung`
+    `https://openapi.programming-hero.com/api/phones?search=${searchText}`
   );
 
   const phones = await response.json();
 
-  if (!phones.status) console.log("Error");
+  if (!phones.status) renderError("Phone didn't found!!");
 
   phoneListing(phones.data.slice(0, 5));
+
+  searchInput.value = "";
 };
 
 // Phone Listing
@@ -45,7 +64,6 @@ const phoneListing = (data) => {
   data.map((phone) => {
     const div = document.createElement("div");
     div.classList.add("col-md-4", "mb-4");
-    // div.createElement("div").classList.add("card");
     div.innerHTML = `
     <div class="card">
     <img src="${phone.image}" class="card-img-top" alt="...">
@@ -58,6 +76,7 @@ const phoneListing = (data) => {
     </div>
     `;
     phoneList.appendChild(div);
+    phoneDetailsEl.innerHTML = "";
   });
 
   // console.log(data);
@@ -72,10 +91,6 @@ const phoneDetails = async (id) => {
   const result = await response.json();
   const { data: phone } = result;
 
-  console.log(phone);
-
-  const { mainFeatures } = phone;
-
   const div = document.createElement("div");
   div.classList.add("row", "mb-5");
   div.innerHTML = `
@@ -87,20 +102,19 @@ const phoneDetails = async (id) => {
     <p class="fs-2"> <strong>Name:</strong> ${phone.name}</p>
     <p class="fs-2"> <strong>Release Date:</strong> ${
       phone.releaseDate ? phone.releaseDate : "No release date found"
-    }</p>
-
+    }</p>   
     
-    <p class="fs-2">
-      <strong>Main Features -</strong>
-    </p>
+    ${
+      phone.mainFeatures
+        ? '<p class="fs-2"><strong>Main Features -</strong></p>'
+        : ""
+    }
 
-    ${loopObject(mainFeatures)}
-
-    <p class="fs-2">
-      <strong>Others -</strong>
-    </p>
+     ${phone.mainFeatures ? loopObject(phone.mainFeatures) : ""}
     
-    ${loopObject(phone.others)}
+    ${phone.others ? '<p class="fs-2"><strong>Others -</strong></p>' : ""}
+
+    ${phone.others ? loopObject(phone.others) : ""}
   </div>
   
   `;
