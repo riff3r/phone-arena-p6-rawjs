@@ -3,15 +3,20 @@ const searchButton = document.getElementById("search-button");
 const phoneDetailsEl = document.getElementById("phone-details");
 const phoneList = document.querySelector("#phone-listing .row");
 
-// Return nasted object as text
+// Return nasted object as HTML
 const loopObject = (object) => {
   return Object.entries(object)
-    .map(
-      ([key, value]) =>
-        `<p class="fs-4"><strong>${
+    .map(([key, value]) => {
+      if (key === "sensors") {
+        return `<p class="fs-4"><strong>${
           key.at(0).toUpperCase() + key.slice(1)
-        }: </strong> ${value}</p>`
-    )
+        }: </strong> ${value.join(", ")}</p>`;
+      }
+
+      return `<p class="fs-4"><strong>${
+        key.at(0).toUpperCase() + key.slice(1)
+      }: </strong> ${value}</p>`;
+    })
     .join("");
 };
 
