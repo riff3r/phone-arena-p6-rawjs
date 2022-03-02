@@ -5,7 +5,6 @@ const phoneList = document.querySelector("#phone-listing .row");
 
 // Return nasted object as HTML
 const loopObject = (object) => {
-  console.log(object);
   return Object.entries(object)
     .map(([key, value]) => {
       if (key === "sensors") {
@@ -87,8 +86,6 @@ const phoneListing = (data) => {
     // clear
     phoneDetailsEl.innerHTML = "";
   });
-
-  // console.log(data);
 };
 
 // Phone Details
@@ -101,29 +98,32 @@ const phoneDetails = async (id) => {
   const { data: phone } = result;
 
   const div = document.createElement("div");
-  div.classList.add("row", "mb-5", "border", "p-4");
+  div.classList.add("border", "p-4", "mb-5");
   div.innerHTML = `
-  <div class="col-xl-4">
-    <img src="${phone.image}" class="card-img-top img-fluid" alt="...">
-  </div>
-  
-  <div class="col-xl-8">
-    <p class="fs-2"> <strong>Name:</strong> ${phone.name}</p>
-    <p class="fs-2"> <strong>Release Date:</strong> ${
-      phone.releaseDate ? phone.releaseDate : "No release date found"
-    }</p>   
-    
-    ${
-      phone.mainFeatures
-        ? '<p class="fs-2"><strong>Main Features -</strong></p>'
-        : ""
-    }
+  <div class="row">
+      <div class="col-xl-4">
+      <img src="${phone.image}" class="card-img-top img-fluid" alt="...">
+    </div>
 
-     ${phone.mainFeatures ? loopObject(phone.mainFeatures) : ""}
-    
-    ${phone.others ? '<p class="fs-2"><strong>Others -</strong></p>' : ""}
+    <div class="col-xl-8">
+      <p class="fs-2"> <strong>Name:</strong> ${phone.name}</p>
+      <p class="fs-3"> <strong>Release Date:</strong> ${
+        phone.releaseDate ? phone.releaseDate : "No release date found"
+      }</p>   
+      
+      ${
+        phone.mainFeatures
+          ? '<p class="fs-3"><strong>Main Features -</strong></p>'
+          : ""
+      }
 
-    ${phone.others ? loopObject(phone.others) : ""}
+      ${phone.mainFeatures ? loopObject(phone.mainFeatures) : ""}
+      
+      ${phone.others ? '<p class="fs-3"><strong>Others -</strong></p>' : ""}
+
+      ${phone.others ? loopObject(phone.others) : ""}
+    </div>
+
   </div>
   `;
   phoneDetailsEl.appendChild(div);
