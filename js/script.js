@@ -50,9 +50,9 @@ const searchPhone = async (event) => {
 
   const phones = await response.json();
 
-  if (!phones.status) renderError("Phone didn't found!!");
-
-  phoneListing(phones.data.slice(0, 5));
+  if (!phones.status) renderError("Phone not found!!");
+  console.log(count);
+  phoneListing(phones.data.slice(20));
 
   searchInput.value = "";
 };
@@ -63,7 +63,7 @@ const phoneListing = (data) => {
   phoneList.innerHTML = "";
   data.map((phone) => {
     const div = document.createElement("div");
-    div.classList.add("col-md-4", "mb-4");
+    div.classList.add("col-md-3", "mb-4");
     div.innerHTML = `
     <div class="card">
     <img src="${phone.image}" class="card-img-top" alt="...">
@@ -78,6 +78,11 @@ const phoneListing = (data) => {
     phoneList.appendChild(div);
     phoneDetailsEl.innerHTML = "";
   });
+
+  const loadMore = document.createElement("button");
+  loadMore.classList.add("load-more", "btn", "btn-primary", "btn-lg");
+  loadMore.innerText = "Load More";
+  phoneList.appendChild(loadMore);
 
   // console.log(data);
 };
@@ -122,52 +127,3 @@ const phoneDetails = async (id) => {
 };
 
 searchButton.addEventListener("click", searchPhone);
-
-// const callApi = async () => {
-//   const phone = await res.json();
-
-//   console.log(phone.data);
-//   phoneDetail(phone.data);
-
-//   //   for()
-// };
-
-// const phoneDetail = (data) => {
-//   let mainFeaturesContainer = [];
-//   const { mainFeatures } = data;
-//   //   console.log(Object.entries(mainFeatures));
-//   //   for (const [key, value] of Object.entries(mainFeatures)) {
-//   //     console.log(`${key}: ${value}`);
-//   //   }
-
-//   //   console.log(mainFeatures);
-//   //   for (const property in mainFeatures) {
-//   //     mainFeaturesContainer.push(`${property}: ${mainFeatures[property]}`);
-//   //   }
-
-//   //   console.log(...mainFeaturesContainer);
-
-//   const values = Object.entries(mainFeatures);
-
-//   //   const keys = Object.keys(mainFeatures);
-
-//   //   const mainResult = keys.forEach(
-//   //     (key, index) => `${key}: ${mainFeatures[key]}`
-//   //   );
-
-//   console.log(values);
-// };
-
-const animals = {
-  tiger: 1,
-
-  cat: 2,
-
-  monkey: 3,
-
-  elephant: 4,
-};
-
-const hlw = Object.keys(animals);
-
-console.log(hlw);
