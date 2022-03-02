@@ -27,7 +27,7 @@ const renderError = (error) => {
   phoneList.innerHTML = "";
 
   const div = document.createElement("div");
-  div.classList.add("alert", "alert-danger");
+  div.classList.add("alert", "alert-warning");
   div.setAttribute("role", "alert");
   div.innerText = error;
   phoneDetailsEl.prepend(div);
@@ -51,8 +51,7 @@ const searchPhone = async (event) => {
   const phones = await response.json();
 
   if (!phones.status) renderError("Phone not found!!");
-  console.log(count);
-  phoneListing(phones.data.slice(20));
+  phoneListing(phones.data.slice(0, 20));
 
   searchInput.value = "";
 };
@@ -65,24 +64,19 @@ const phoneListing = (data) => {
     const div = document.createElement("div");
     div.classList.add("col-md-3", "mb-4");
     div.innerHTML = `
-    <div class="card">
+    <div class="card p-3">
     <img src="${phone.image}" class="card-img-top" alt="...">
       <div class="card-body">
-        <h3 class="card-title">${phone.phone_name}</h3>
+        <h3 class="fs-4">${phone.phone_name}</h3>
         <h5 class="card-title mb-4">${phone.brand}</h5>
         
-        <a onclick="phoneDetails('${phone.slug}')" class="btn btn-primary px-5 py-2">Details</a>
+        <a onclick="phoneDetails('${phone.slug}')" class="btn btn-warning px-3 py-2">Details</a>
       </div>
     </div>
     `;
     phoneList.appendChild(div);
     phoneDetailsEl.innerHTML = "";
   });
-
-  const loadMore = document.createElement("button");
-  loadMore.classList.add("load-more", "btn", "btn-primary", "btn-lg");
-  loadMore.innerText = "Load More";
-  phoneList.appendChild(loadMore);
 
   // console.log(data);
 };
@@ -97,7 +91,7 @@ const phoneDetails = async (id) => {
   const { data: phone } = result;
 
   const div = document.createElement("div");
-  div.classList.add("row", "mb-5");
+  div.classList.add("row", "mb-5", "border", "p-4");
   div.innerHTML = `
   <div class="col-xl-4">
     <img src="${phone.image}" class="card-img-top img-fluid" alt="...">
@@ -121,7 +115,6 @@ const phoneDetails = async (id) => {
 
     ${phone.others ? loopObject(phone.others) : ""}
   </div>
-  
   `;
   phoneDetailsEl.appendChild(div);
 };
