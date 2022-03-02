@@ -23,9 +23,11 @@ const loopObject = (object) => {
 
 // Display Error
 const renderError = (error) => {
+  // Clear
   phoneDetailsEl.innerHTML = "";
   phoneList.innerHTML = "";
 
+  // Display
   const div = document.createElement("div");
   div.classList.add("alert", "alert-warning");
   div.setAttribute("role", "alert");
@@ -38,28 +40,34 @@ const searchPhone = async (event) => {
   event.preventDefault();
   const searchText = searchInput.value;
 
+  // Condition for empty search
   if (!searchText) {
     renderError("You didn't type anything. Please enter your desired phone");
     return;
   }
 
+  // Get data from API
   const response = await fetch(
-    // `https://openapi.programming-hero.com/api/phones?search=samsung`
     `https://openapi.programming-hero.com/api/phones?search=${searchText}`
   );
-
   const phones = await response.json();
 
+  // Condition for no search result
   if (!phones.status) renderError("Phone not found!!");
+
+  // Pass data for phone listing
   phoneListing(phones.data.slice(0, 20));
 
+  // Clear
   searchInput.value = "";
 };
 
 // Phone Listing
 const phoneListing = (data) => {
-  console.log(data);
+  // Clear
   phoneList.innerHTML = "";
+
+  // Loop the data and render
   data.map((phone) => {
     const div = document.createElement("div");
     div.classList.add("col-md-3", "mb-4");
@@ -69,12 +77,14 @@ const phoneListing = (data) => {
       <div class="card-body">
         <h3 class="fs-4">${phone.phone_name}</h3>
         <h5 class="card-title mb-4">${phone.brand}</h5>
-        
+    
         <a onclick="phoneDetails('${phone.slug}')" class="btn btn-warning px-3 py-2">Details</a>
       </div>
     </div>
     `;
     phoneList.appendChild(div);
+
+    // clear
     phoneDetailsEl.innerHTML = "";
   });
 
@@ -86,8 +96,8 @@ const phoneDetails = async (id) => {
   const response = await fetch(
     `https://openapi.programming-hero.com/api/phone/${id}`
   );
-
   const result = await response.json();
+
   const { data: phone } = result;
 
   const div = document.createElement("div");
@@ -119,4 +129,5 @@ const phoneDetails = async (id) => {
   phoneDetailsEl.appendChild(div);
 };
 
+// Event Handler
 searchButton.addEventListener("click", searchPhone);
